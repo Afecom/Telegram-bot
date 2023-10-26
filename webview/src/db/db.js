@@ -5,15 +5,16 @@ const consumerSecret = 'cs_54f05f6e23f158b1abde94968fb3a2d40aeb7ba7';
 
 export async function getData() {
   try {
-    const response = await axios.get('https://aveluxecosmetics.com/wp-json/wc/v3/products', {
-      headers: {
-        Authorization: `Bearer ${consumerKey}:${consumerSecret}`,
-      },
-    });
+    const response = await fetch(
+      "https://aveluxecosmetics.com/wp-json/wc/v3/products?consumer_key="+consumer_key+"&consumer_secret="+consumer_secret
+    );
 
-    // Assuming the response contains an array of products
-    const { data } = response;
-    console.log(data); // Log the data to inspect its structure
+    if (!response.ok) {
+      throw new Error('Request failed');
+    }
+
+    const data = await response.json();
+    console.log(data);
     return data;
   } catch (error) {
     console.error('Error fetching data:', error);
