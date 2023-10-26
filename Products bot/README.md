@@ -1,6 +1,7 @@
-# Test Telegram Shop Bot
+# Aveluxe Telegram Shop Bot
 
-> A sample bot application to test your integration between Telegram and Chapa. 
+> This is Aveluxe's bot which is integrated with Telegram and Chapa. 
+> And enables to fetch products from the woocommerce store and order products from there.
 
 # How to use
 
@@ -31,4 +32,4 @@
 
 
 -----
-> This project is a simpler version from Chapi (@temkinmengstu), shout to Chapi. 
+> This project is a version from Chapi (@temkinmengstu), shout to Chapi. 
