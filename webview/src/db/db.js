@@ -1,33 +1,22 @@
-const fetch = require('node-fetch');
+import axios from 'axios';
+
+const consumerKey = 'ck_0a1d0af37fc58d63e8925d487fa92f3c17e93726';
+const consumerSecret = 'cs_54f05f6e23f158b1abde94968fb3a2d40aeb7ba7';
 
 export async function getData() {
   try {
-    const response = await fetch('https://your-woocommerce-api-endpoint/wp-json/wc/v3/products', {
-      method: 'GET',
+    const response = await axios.get('https://aveluxecosmetics.com/wp-json/wc/v3/products', {
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer YOUR_API_TOKEN' // Replace with your WooCommerce API token
-      }
+        Authorization: `Bearer ${consumerKey}:${consumerSecret}`,
+      },
     });
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch products from the WooCommerce API');
-    }
-
-    const products = await response.json();
-
-    // Transform the fetched products into the desired format
-    const transformedProducts = products.map(product => ({
-      title: product.name,
-      price: product.price,
-      image: product.images[0]?.src,
-      id: product.id
-    }));
-
-    return transformedProducts;
+    // Assuming the response contains an array of products
+    const { data } = response;
+    return data;
   } catch (error) {
-    console.error('Error fetching products:', error);
-    return [];
+    console.error('Error fetching data:', error);
+    throw error;
   }
 }
 
