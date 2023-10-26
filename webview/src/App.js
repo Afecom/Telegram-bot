@@ -1,18 +1,25 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import Card from "./Components/Card/Card";
 import Cart from "./Components/Cart/Cart";
-const { getData } = require("./db/db");
-const foods = getData();
-
-const tele = window.Telegram.WebApp;
+import { getData } from "./db/db";
 
 function App() {
   const [cartItems, setCartItems] = useState([]);
+  const [foods, setFoods] = useState([]);
 
   useEffect(() => {
-    tele.ready();
-  });
+    async function fetchData() {
+      try {
+        const data = await getData();
+        setFoods(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+
+    fetchData();
+  }, []);
 
   const onAdd = (food) => {
     const exist = cartItems.find((x) => x.id === food.id);
@@ -41,18 +48,22 @@ function App() {
   };
 
   const onCheckout = () => {
-    tele.MainButton.text = "Pay :)";
-    tele.MainButton.show();
+    // Perform checkout logic here
   };
 
   return (
     <>
       <h1 className="heading">Order Food</h1>
-      <Cart cartItems={cartItems} onCheckout={onCheckout}/>
+      <Cart cartItems={cartItems} onCheckout={onCheckout} />
       <div className="cards__container">
         {foods.map((food) => {
           return (
-            <Card food={food} key={food.id} onAdd={onAdd} onRemove={onRemove} />
+            <Card
+              key={food.id}
+              food={food}
+              onAdd={onAdd}
+              onRemove={onRemove}
+            />
           );
         })}
       </div>
