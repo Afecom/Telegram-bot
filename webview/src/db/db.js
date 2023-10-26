@@ -23,11 +23,6 @@ async function getData() {
   }
 }
 
-// Call the function to fetch data
-getData()
-  .then(data => {
-    console.log('Data:', data);
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
+module.exports = {
+  getData
+};
