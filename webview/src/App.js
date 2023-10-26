@@ -1,49 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import './App.css';
-import Card from './Components/Card/Card';
-import Cart from './Components/Cart/Cart';
-import { getData } from './db/db';
+import { useState, useEffect } from "react";
+import "./App.css";
+import Card from "./Components/Card/Card";
+import Cart from "./Components/Cart/Cart";
+const { getData } = require("./db/db");
+const foods = getData();
 
 const tele = window.Telegram.WebApp;
 
 function App() {
   const [cartItems, setCartItems] = useState([]);
-  const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    async function fetchProducts() {
-      try {
-        const data = await getData();
-        setProducts(data);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-      }
-    }
+    tele.ready();
+  });
 
-    fetchProducts();
-  }, []);
-
-  const onAdd = (product) => {
-    const exist = cartItems.find((item) => item.id === product.id);
+  const onAdd = (food) => {
+    const exist = cartItems.find((x) => x.id === food.id);
     if (exist) {
       setCartItems(
-        cartItems.map((item) =>
-          item.id === product.id ? { ...exist, quantity: exist.quantity + 1 } : item
+        cartItems.map((x) =>
+          x.id === food.id ? { ...exist, quantity: exist.quantity + 1 } : x
         )
       );
     } else {
-      setCartItems([...cartItems, { ...product, quantity: 1 }]);
+      setCartItems([...cartItems, { ...food, quantity: 1 }]);
     }
   };
 
-  const onRemove = (product) => {
-    const exist = cartItems.find((item) => item.id === product.id);
+  const onRemove = (food) => {
+    const exist = cartItems.find((x) => x.id === food.id);
     if (exist.quantity === 1) {
-      setCartItems(cartItems.filter((item) => item.id !== product.id));
+      setCartItems(cartItems.filter((x) => x.id !== food.id));
     } else {
       setCartItems(
-        cartItems.map((item) =>
-          item.id === product.id ? { ...exist, quantity: exist.quantity - 1 } : item
+        cartItems.map((x) =>
+          x.id === food.id ? { ...exist, quantity: exist.quantity - 1 } : x
         )
       );
     }
@@ -57,16 +48,13 @@ function App() {
   return (
     <>
       <h1 className="heading">Order Food</h1>
-      <Cart cartItems={cartItems} onCheckout={onCheckout} />
+      <Cart cartItems={cartItems} onCheckout={onCheckout}/>
       <div className="cards__container">
-        {products.map((product) => (
-          <Card
-            key={product.id}
-            product={product}
-            onAdd={onAdd}
-            onRemove={onRemove}
-          />
-        ))}
+        {foods.map((food) => {
+          return (
+            <Card food={food} key={food.id} onAdd={onAdd} onRemove={onRemove} />
+          );
+        })}
       </div>
     </>
   );

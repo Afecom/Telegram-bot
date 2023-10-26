@@ -1,7 +1,6 @@
-const React = require("react");
-const { useState, useEffect } = React;
-require ("./Cart.css");
-const Button = require(path.join(__dirname, ".../Button/Button")).default;
+import React from "react";
+import "./Cart.css";
+import Button from "../Button/Button";
 function Cart({ cartItems, onCheckout }) {
   const totalPrice = cartItems.reduce((a, c) => a + c.price * c.quantity, 0);
 

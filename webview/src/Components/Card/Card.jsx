@@ -1,8 +1,6 @@
-const React = require("react");
-const { useState, useEffect } = React;
-require ("./Card.css");
-const Button = require(path.join(__dirname, ".../Button/Button")).default;
-
+import React, { useState } from "react";
+import "./Card.css";
+import Button from "../Button/Button";
 function Card({ food, onAdd, onRemove }) {
   const [count, setCount] = useState(0);
   const { title, Image, price, id } = food;
