@@ -12,6 +12,7 @@ from telegram import __version__ as TG_VER
 from woocommerce import API
 from bs4 import BeautifulSoup
 from decimal import Decimal
+from typing import Set
 
 try:
     from telegram import __version_info__
@@ -64,6 +65,28 @@ async def start_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
     await update.message.reply_text(msg)
 
+def get_valid_product_ids() -> Set[int]:
+    """
+    Fetches and returns the valid product IDs from the WooCommerce store.
+    """
+    valid_product_ids = set()
+
+    try:
+        # Make a request to the WooCommerce API endpoint that provides product IDs
+        response = wcapi.get("products", params={"per_page": 100})
+        products = response.json()
+
+        # Extract valid product IDs from the response
+        valid_product_ids = {product['id'] for product in products}
+
+    except Exception as e:
+        # Handle any errors that may occur during the request
+        print(f"Error fetching valid product IDs: {e}")
+
+    return valid_product_ids
+
+# A set of valid product IDs
+valid_product_ids = get_valid_product_ids()
 
 async def send_invoice_for_products_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Sends an invoice for the products fetched from WooCommerce."""
@@ -104,11 +127,9 @@ async def send_invoice_for_products_callback(update: Update, context: ContextTyp
                 is_flexible=True,
                 photo_url=image_url,
             )
-
-        except:
+        except Exception as e:
             logger.error(f"Error sending invoice for product {product['name']}: {str(e)}")
-
-
+        
 async def shipping_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Answers the ShippingQuery with ShippingOptions"""
     query = update.shipping_query
@@ -121,24 +142,6 @@ async def shipping_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     await query.answer(ok=True, shipping_options=common_shipping_options)
 
 # after (optional) shipping, it's the pre-checkout
-
-# A set of valid product IDs
-valid_product_ids = {
-    15717, 
-    15722, 
-    15727,
-    15843,
-    16024,
-    16020,
-    16016,
-    16003,
-    15998,
-    15984,
-    15979,
-    15973,
-    15972,
-    }
-
 async def precheckout_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Answers the PreQecheckoutQuery"""
     query = update.pre_checkout_query
@@ -150,7 +153,6 @@ async def precheckout_callback(update: Update, context: ContextTypes.DEFAULT_TYP
     else:
         # Answer False pre_checkout_query
         await query.answer(ok=False, error_message="Invalid product ID. Contact customer support. Thanks for your patience!")
-
 
 # finally, after contacting the payment provider...
 async def successful_payment_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
