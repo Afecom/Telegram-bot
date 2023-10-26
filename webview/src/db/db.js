@@ -1,37 +1,33 @@
 const fetch = require('node-fetch');
 
-export async function getData() {
-  const consumer_key = "ck_0a1d0af37fc58d63e8925d487fa92f3c17e93726";
-  const consumer_secret = "cs_54f05f6e23f158b1abde94968fb3a2d40aeb7ba7";
+const consumerKey = 'ck_0a1d0af37fc58d63e8925d487fa92f3c17e93726';
+const consumerSecret = 'cs_54f05f6e23f158b1abde94968fb3a2d40aeb7ba7';
+
+async function getData() {
   try {
-    const response = await fetch(
-      "https://aveluxecosmetics.com/wp-json/wc/v3/products?consumer_key="+consumer_key+"&consumer_secret="+consumer_secret
-    );
+    const response = await fetch('https://aveluxecosmetics.com/wp-json/wc/v3/products', {
+      headers: {
+        Authorization: `Bearer ${consumerKey}:${consumerSecret}`
+      }
+    });
 
     if (!response.ok) {
-      throw new Error("Failed to fetch products from the API.");
+      throw new Error('Request failed');
     }
 
-    const productsData = await response.json();
-    console.log(productsData);
-
-    return productsData.map((product) => ({
-      title: product.name,
-      price: product.sale_price,
-      Image: product.image[0].src,
-      id: product.id,
-    }));
+    const data = await response.json();
+    return data;
   } catch (error) {
-    console.error(error);
-    return [];
+    console.error('Error fetching data:', error);
+    throw error;
   }
 }
 
-// Usage example
-// getData()
-//   .then((products) => {
-//     console.log(products);
-//   })
-//   .catch((error) => {
-//     console.error(error);
-//   });
+// Call the function to fetch data
+getData()
+  .then(data => {
+    console.log('Data:', data);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
