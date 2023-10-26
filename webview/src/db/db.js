@@ -13,6 +13,7 @@ export async function getData() {
 
     // Assuming the response contains an array of products
     const { data } = response;
+    console.log(data); // Log the data to inspect its structure
     return data;
   } catch (error) {
     console.error('Error fetching data:', error);
