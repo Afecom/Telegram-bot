@@ -18,8 +18,8 @@ async function getData() {
     const products = data.map((item) => {
       return {
         title: item.title,
-        price: item.price,
-        Image: item.Image,
+        price: item.sale_price,
+        Image: item.images[0].src,
         id: item.id
       };
     });
