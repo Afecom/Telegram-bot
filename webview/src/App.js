@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import Card from "./Components/Card/Card";
 import Cart from "./Components/Cart/Cart";
-const { getData } = require("./db/db");
-const foods = getData();
+const { getResult } = require("./db/db");
+
+/*const foods = getData();
 
 const tele = window.Telegram.WebApp;
 
@@ -60,4 +61,4 @@ function App() {
   );
 }
 
-export default App;
+export default App;*/ 
