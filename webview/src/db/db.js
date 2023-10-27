@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 
-const consumerKey = 'your_consumer_key';
-const consumerSecret = 'your_consumer_secret';
+const consumerKey = 'ck_0a1d0af37fc58d63e8925d487fa92f3c17e93726';
+const consumerSecret = 'cs_54f05f6e23f158b1abde94968fb3a2d40aeb7ba7';
 
 let result; // Declare the result variable outside the function
 
