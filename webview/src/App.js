@@ -2,28 +2,17 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import Card from "./Components/Card/Card";
 import Cart from "./Components/Cart/Cart";
-import { getData } from "./db/db";
+const { getData } = require("./db/db");
+const foods = getData();
 
 const tele = window.Telegram.WebApp;
 
 function App() {
   const [cartItems, setCartItems] = useState([]);
-  const [foods, setFoods] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchFoods = async () => {
-      try {
-        const data = await getData();
-        setFoods(data);
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchFoods();
-  }, []);
+    tele.ready();
+  });
 
   const onAdd = (food) => {
     const exist = cartItems.find((x) => x.id === food.id);
@@ -56,23 +45,14 @@ function App() {
     tele.MainButton.show();
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <>
       <h1 className="heading">Order Food</h1>
-      <Cart cartItems={cartItems} onCheckout={onCheckout} />
+      <Cart cartItems={cartItems} onCheckout={onCheckout}/>
       <div className="cards__container">
         {foods.map((food) => {
           return (
-            <Card
-              food={food}
-              key={food.id}
-              onAdd={onAdd}
-              onRemove={onRemove}
-            />
+            <Card food={food} key={food.id} onAdd={onAdd} onRemove={onRemove} />
           );
         })}
       </div>
