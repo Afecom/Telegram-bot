@@ -6,7 +6,11 @@ const { getData} = require("./db/db");
 //const foods = getData(); 
 
 function App(){
-  console.log("in app"); 
+  return ( 
+    <>
+    <h1>In App</> 
+    </>
+  );
 }
 export default App;
 //const { getResult } = require("./db/db");
