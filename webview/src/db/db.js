@@ -1,7 +1,7 @@
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
 
-const consumerKey = 'ck_0a1d0af37fc58d63e8925d487fa92f3c17e93726';
-const consumerSecret = 'cs_54f05f6e23f158b1abde94968fb3a2d40aeb7ba7';
+const consumerKey = 'your_consumer_key';
+const consumerSecret = 'your_consumer_secret';
 
 async function getData() {
   try {
@@ -16,13 +16,24 @@ async function getData() {
     }
 
     const data = await response.json();
-    return data;
+    console.log('Data:', data); // Log the products to the console
+    
+    // Transform the received data into an array of product objects
+    const products = data.map((item) => {
+      return {
+        title: item.title,
+        price: item.price,
+        Image: item.images[0].src,
+        id: item.id
+      };
+    });
+
+
+    return products;
   } catch (error) {
     console.error('Error fetching data:', error);
     throw error;
   }
 }
 
-module.exports = {
-  getData
-};
+export { getData };
