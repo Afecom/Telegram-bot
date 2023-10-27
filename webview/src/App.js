@@ -8,7 +8,7 @@ const { getData} = require("./db/db");
 function App(){
   return ( 
     <>
-    <h1>In App</> 
+    <h1>In App</h1> 
     </>
   );
 }
