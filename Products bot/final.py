@@ -96,11 +96,7 @@ async def send_invoice_for_products_callback(update: Update, context: ContextTyp
     # Iterate through products and send invoices
     for product in products:
         title = product['name']
-        description_with_tags = product['short_description']
-
-        # Remove HTML tags from the description
-        soup = BeautifulSoup(description_with_tags, 'html.parser')
-        description = soup.get_text()
+        description = "📞 Contact Us\n\nHave questions or need assistance? We're here to help!\n\nCustomer Inquiries:\n📧 Email: support@aveluxe.com\n📞 Phone: +1 (555) 123-4567\n\nBusiness Inquiries:\n📧 Email: business@aveluxe.com\n\nVisit Our Office:\n📍 Aveluxe Headquarters\n123 Luxe Avenue, Cityville\nEthiopia"
 
         image_url = product['images'][0]['src']
         payload = str(product['id'])

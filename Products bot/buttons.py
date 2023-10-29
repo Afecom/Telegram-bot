@@ -124,14 +124,21 @@ async def send_invoice_for_products_callback(update: Update, context: ContextTyp
         # Include the buttons in the keyboard markup
         keyboard = [[buy_button], [contact_button]]
 
+        # "Share" button with switch_inline_query
+        share_button = InlineKeyboardButton("Share", switch_inline_query="Aveluxebot start")
+
+        # Include the buttons in the keyboard markup
+        keyboard = [[buy_button, contact_button], [share_button]]
+
         try:
-            # Send the image with the product information
-            await context.bot.send_photo(
-                chat_id,
-                photo=image_url,
-                caption=f"{title}\n\n{description}\n\nPrice: {price} {currency}",
-                reply_markup=InlineKeyboardMarkup(keyboard),
-            )
+           # Send photo with inline buttons
+           await context.bot.send_photo(
+               chat_id,
+               photo=image_url,
+               caption=f"{title}\n\n{description}\n\nPrice: {price} {currency}",
+               reply_markup=InlineKeyboardMarkup(keyboard),
+           )
+        
         except Exception as e:
             logger.error(f"Error sending product message with 'Buy' and 'Contact Us' buttons: {str(e)}")
 
