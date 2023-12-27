@@ -95,13 +95,12 @@ async def send_invoice_for_products_callback(update: Update, context: ContextTyp
     # Iterate through products and send invoices
     for product in products:
         title = product['name']
-        description = "📞 Contact Us\n\nHave questions or need assistance? We're here to help!\n\nCustomer Inquiries:\n📧 Email: support@aveluxe.com\n📞 Phone: +1 (555) 123-4567\n\nBusiness Inquiries:\n📧 Email: business@aveluxe.com\n\nVisit Our Office:\n📍 Aveluxe Headquarters\n123 Luxe Avenue, Cityville\nEthiopia"
-
-        image_url = product['images'][0]['src']
+        description = product['short_description']
+        image= product['images'][0]['src']
         payload = str(product['id'])
         currency = 'ETB'  # You might need to adjust this based on the actual currency in WooCommerce
         price = product['price']
-        
+
         # Sending the product information to Telegram
         cents_price = int(Decimal(price) * 100)
         prices = [LabeledPrice(title, cents_price)]
@@ -120,7 +119,7 @@ async def send_invoice_for_products_callback(update: Update, context: ContextTyp
                 need_email=True,
                 need_shipping_address=True,
                 is_flexible=True,
-                photo_url=image_url,
+                photo_url=image,
             )
         except Exception as e:
             logger.error(f"Error sending invoice for product {product['name']}: {str(e)}")
