@@ -264,28 +264,28 @@ async def successful_payment_callback(update: Update, context: ContextTypes.DEFA
         print("No payment information found in the update.")
 
 
-def main() -> None:
-    """Run the bot."""
+def application(environ, start_response):
+    """WSGI application entry point."""
     # Create the Application and pass it your bot's token.
-    application = Application.builder().token(BOT_TOKEN).build()
+    app = Application.builder().token(BOT_TOKEN).build()
 
-    # simple start function
-    application.add_handler(CommandHandler("start", start_callback))
+    # Simple start function
+    app.add_handler(CommandHandler("start", start_callback))
 
     # Add command handler to start the payment invoice
-    application.add_handler(CommandHandler(
-        "our_store", send_invoice_for_products_callback))
-    
+    app.add_handler(CommandHandler("our_store", send_invoice_for_products_callback))
+
     # Optional handler if your product requires shipping
-    application.add_handler(ShippingQueryHandler(shipping_callback))
+    app.add_handler(ShippingQueryHandler(shipping_callback))
 
     # Pre-checkout handler to final check
-    application.add_handler(PreCheckoutQueryHandler(precheckout_callback))
+    app.add_handler(PreCheckoutQueryHandler(precheckout_callback))
 
     # Success! Notify your user!
-    application.add_handler(
-        MessageHandler(filters.SUCCESSFUL_PAYMENT, successful_payment_callback)
-    )
+    app.add_handler(MessageHandler(filters.SUCCESSFUL_PAYMENT, successful_payment_callback))
+
+    # Pass the WSGI environment and start_response function to the application
+    return app.handle(environ, start_response)
 
     # Run the bot until the user presses Ctrl-C
     application.run_polling()
